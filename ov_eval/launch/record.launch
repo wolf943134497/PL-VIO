@@ -1,0 +1,26 @@
+<launch>
+
+
+    <!-- what ros bag to play -->
+    <arg name="bag_name"    default="V1_01_easy" />
+    <arg name="bag_path"    default="/home/zhangyanyu/Downloads" />
+
+
+    <!-- where to save the recorded poses -->
+    <arg name="path_save"   default="/home/zhangyanyu/catkin_ws_ov/src/open_vins/ov_data/" />
+
+
+    <!-- record the trajectory /groundtruth/pose -->
+    <node name="recorder_estimate" pkg="ov_eval" type="pose_to_file" output="screen" required="true">
+        <param name="topic"      type="str" value="/ov_msckf/poseimu" />
+        <param name="topic_type" type="str" value="PoseWithCovarianceStamped" />
+        <param name="output"     type="str" value="$(arg path_save)/$(arg bag_name).txt" />
+    </node>
+
+
+    <!-- play the dataset -->
+
+    <node pkg="rosbag" type="play" name="rosbag" args="-r 4 $(arg bag_path)/$(arg bag_name).bag" required="true"/>
+
+
+</launch>
